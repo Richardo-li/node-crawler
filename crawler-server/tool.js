@@ -13,12 +13,22 @@ charset(superagent); //设置字符
  *     }
  *   }
  */
-module.exports.Success = (res, sData) => {
+module.exports.Success = (res, sData) => {  //成功的回调
   res.end(
     JSON.stringify({
       code: "1",
       result: {
         data: sData
+      }
+    })
+  );
+};
+module.exports.False = (res) => {  //失败的回调
+  res.end(
+    JSON.stringify({
+      code: "0",
+      result: {
+        data: null
       }
     })
   );

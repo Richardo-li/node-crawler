@@ -1,7 +1,11 @@
 <template>
   <div class="news">
+    <!-- 攻略列表 -->
+    <title-comp>
+      <slot>攻略列表</slot>
+    </title-comp>
     <div class="news">
-      <a :href="item.href" v-for="(item,i) in listData" :key="i">
+      <a :href="item.href" v-for="(item,i) in listData" :key="i" target="_blank">
         <span>
           <img :src="item.imgSrc" alt="" class="newsImg">
           <span class="tit">{{item.title}}</span>
@@ -12,7 +16,7 @@
     </div>
 
     <div class="block">
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="pager.currentPage" :page-size="100" layout="prev, pager, next, jumper" :total="pager.total">
+      <el-pagination :background='true' @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="pager.currentPage" :page-size="100" layout="prev, pager, next, jumper" :total="pager.total">
       </el-pagination>
     </div>
 
@@ -20,8 +24,13 @@
 </template>
 
 <script>
+import titleComp from "@/components/title-comp.vue";
+
 export default {
   name: "news",
+  components: {
+    titleComp
+  },
   data() {
     return {
       currentDate: new Date(),
@@ -65,12 +74,10 @@ export default {
       }
     }
   }
-
   .listImg {
     width: 100%;
     height: 100%;
   }
-
   .news {
     a {
       display: block;
@@ -116,7 +123,6 @@ export default {
       }
     }
   }
-
   .block {
     text-align: center;
     padding: 10px 0 30px 0;

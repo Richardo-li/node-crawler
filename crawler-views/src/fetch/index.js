@@ -49,19 +49,20 @@ axios.interceptors.response.use(
   function(response) {
     globalLoading.close(); //关闭全局loading
 
-    if (response.status == 200 && response.data.code == "1") {
+    if (response.status == 200 && response.data.code == "1" || response.data.code == "0" ) {
       return response.data.result;
     } else {
       //如果网络错误，则可以弹出提示
       //如果返回未登录状态码，则提示并调到登录页（得引入路由router）
       //如果.....
       //反正就是根据返回的状态码执行对应的操作
+      Message.error("网络错误，请稍后重试！");
       console.log(response);
     }
   },
   function(error) {
     if (error.code == "ECONNABORTED") {
-      Message.error("请求超时");
+      Message.error("请求超时！");
     }
     return Promise.reject(error);
   }

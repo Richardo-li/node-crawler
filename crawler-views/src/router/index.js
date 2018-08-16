@@ -6,9 +6,14 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
-      path: '/',
+      path: '/news',
       name: 'news',
-      component: resole => require(['../components/news.vue'], resole)
-    }
+      component: () => import("../pages/news.vue")   //路由懒加载
+    },
+    {
+      path: '/heroList',
+      name: 'heroList',
+      component: () => import("../pages/heroList.vue")
+    },
   ]
 })

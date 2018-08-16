@@ -11,7 +11,7 @@ module.exports.getKvBg = (req, res) => {
       //相当于jQuery的dom操作
       var str = $(".kv-bg").attr("style"); //获取背景图
       if (!str) {
-        // str = $(".kv-bg").attr().style;
+        Tool.False(res);
         return;
       }
       Tool.Success(res, str.substring(str.indexOf("(") + 1, str.indexOf(")")));

@@ -10,6 +10,6 @@ app.use(cors());
 app.use(router);
 
 app.listen(8888, () => {
-    console.log('数据抓取成功！');
+    console.log('success!');
 })
  
