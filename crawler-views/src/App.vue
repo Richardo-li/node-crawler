@@ -6,13 +6,22 @@
 
     <div class="banx">
       <router-view/>
+
+      <hero-list></hero-list>
     </div>
+
   </div>
 </template>
 
 <script>
+
+import heroList from "@/components/heroList.vue";
+
 export default {
   name: "App",
+  components: {
+    heroList
+  },
   data() {
     return {
       kvBg: ""
@@ -32,7 +41,7 @@ export default {
       });
     },
   },
-  created() {},
+  created() { },
   mounted() {
     this.getKvBg();
   }

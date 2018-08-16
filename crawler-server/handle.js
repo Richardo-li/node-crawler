@@ -3,30 +3,6 @@ const Tool = require("./tool"); //自定义模块
 const heroHomeUrl = "http://pvp.qq.com/";
 const heroListUrl = "http://pvp.qq.com/web201605/herolist.shtml";
 
-// module.exports.getData = (req, res) => {
-//   superagent.get('http://news.baidu.com/')//请求页面地址
-//     .end(function (err, sres) {//页面获取到的数据
-//       if (err) return next(err);
-//       var $ = cheerio.load(sres.text);//用cheerio解析页面数据
-//       var arr = [];
-//       $(".ulist.focuslistnews").each(function (index, ele) {//下面类似于jquery的操作，前端的小伙伴们肯定很熟悉啦
-//         var $eleItem = $(ele).find('.bold-item a');
-//         var $eleItemSon = $(ele).find('.bold-item ~ li a')
-//         arr.push(
-//           {
-//             title: $eleItem.text(),
-//             href: $eleItem.attr('href'),
-//             item: {
-//               title: $eleItemSon.text(),
-//               href: $eleItemSon.attr('href')
-//             }
-//           }
-//         );
-//       });
-//       res.end(JSON.stringify(arr));  //输出接口
-//     })
-// }
-
 //获取背景图
 module.exports.getKvBg = (req, res) => {
   Tool.superAgent({
@@ -34,6 +10,10 @@ module.exports.getKvBg = (req, res) => {
     callback: $ => {
       //相当于jQuery的dom操作
       var str = $(".kv-bg").attr("style"); //获取背景图
+      if (!str) {
+        // str = $(".kv-bg").attr().style;
+        return;
+      }
       Tool.Success(res, str.substring(str.indexOf("(") + 1, str.indexOf(")")));
     }
   });
@@ -47,7 +27,7 @@ module.exports.getNewsList = (req, res) => {
     param += chunk;
   });
   req.on("end", () => {
-    Tool.superAgent({  
+    Tool.superAgent({
       Url: Tool.List(param),
       callback: $ => {
         let pageInfoArr = [];
@@ -79,18 +59,22 @@ module.exports.getNewsList = (req, res) => {
 module.exports.getHeroList = (req, res) => {
   Tool.superAgent({
     Url: heroListUrl,
+    charset: "gbk",
     callback: $ => {
+      let arr = [];
+      $(".herolist>li").each((i, ele) => {
+        let $li = $(ele);
+        arr.push({
+          heroName: $li.find("a").text(),
+          heroImg: $li.find("a>img").attr("src"),
+          heroNum: $li
+            .find("a")
+            .attr("href")
+            .match(/\d+/g)[0]
+        });
+      });
 
-      $('.herolist>li').each((i,ele)=>{
-        let $li=$(ele);
-        console.log($li.find('a').text());
-      })
-
-      // Tool.Success(res, {
-      //   allPage: pageInfoArr[0],
-      //   total: pageInfoArr[1],
-      //   data: listInfo
-      // });
+      Tool.Success(res, arr);
     }
   });
 };
