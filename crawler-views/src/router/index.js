@@ -7,8 +7,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'crawler',
-      component: resole => require(['../components/home.vue'], resole)
+      name: 'news',
+      component: resole => require(['../components/news.vue'], resole)
     }
   ]
 })

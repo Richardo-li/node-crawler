@@ -1,5 +1,5 @@
 <template>
-  <div class="crawler">
+  <div class="news">
     <div class="news">
       <a :href="item.href" v-for="(item,i) in listData" :key="i">
         <span>
@@ -21,7 +21,7 @@
 
 <script>
 export default {
-  name: "crawler",
+  name: "news",
   data() {
     return {
       currentDate: new Date(),
@@ -52,7 +52,7 @@ export default {
 };
 </script>
 <style scoped lang='less'>
-.crawler {
+.news {
   .littleBox {
     ul {
       a {

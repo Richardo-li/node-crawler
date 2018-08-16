@@ -25,7 +25,7 @@ export default {
     }
   },
   methods: {
-    //获取背景图
+    //获取王者荣耀官网背景图
     getKvBg() {
       this.$axios.get("/kvBg").then(res => {
         this.kvBg = res.data;

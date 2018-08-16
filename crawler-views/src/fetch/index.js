@@ -2,8 +2,6 @@ import axios from 'axios'
 
 import { Loading } from 'element-ui'   //引入element-ui的loading组件
 
-// axios.defaults.baseURL = 'http://127.0.0.1:8888';;  //默认请求url
-
 // 环境的切换
 if (process.env.NODE_ENV == 'development') {  //开发环境
   axios.defaults.baseURL = 'http://127.0.0.1:8888';
