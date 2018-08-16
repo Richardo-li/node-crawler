@@ -1,6 +1,7 @@
 //该脚本用来处理数据并返回
-const Tool = require('./tool')  //自定义模块
-const heroHomeUrl = 'http://pvp.qq.com/';
+const Tool = require("./tool"); //自定义模块
+const heroHomeUrl = "http://pvp.qq.com/";
+const heroListUrl = "http://pvp.qq.com/web201605/herolist.shtml";
 
 // module.exports.getData = (req, res) => {
 //   superagent.get('http://news.baidu.com/')//请求页面地址
@@ -30,54 +31,66 @@ const heroHomeUrl = 'http://pvp.qq.com/';
 module.exports.getKvBg = (req, res) => {
   Tool.superAgent({
     Url: heroHomeUrl,
-    callback: ($) => {
+    callback: $ => {
       //相当于jQuery的dom操作
-      var str = $('.kv-bg').attr('style'); //获取背景图
+      var str = $(".kv-bg").attr("style"); //获取背景图
       Tool.Success(res, str.substring(str.indexOf("(") + 1, str.indexOf(")")));
     }
-  })
-}
- 
+  });
+};
+
 //获取攻略新闻list
 module.exports.getNewsList = (req, res) => {
   //先得到前端传来的数据
-  var param = '';
-  req.on('data', (chunk) => {
+  var param = "";
+  req.on("data", chunk => {
     param += chunk;
-  })
-  req.on('end', () => {
-    Tool.superAgent({
+  });
+  req.on("end", () => {
+    Tool.superAgent({  
       Url: Tool.List(param),
-      callback: ($) => {
+      callback: $ => {
         let pageInfoArr = [];
-        $('.pageinfo>strong').each((index, ele) => {
+        $(".pageinfo>strong").each((index, ele) => {
           pageInfoArr.push($(ele).text());
-        })
+        });
         let listInfo = [];
-        $('.list-detail>li').each((index, ele) => {
+        $(".list-detail>li").each((index, ele) => {
           let $li = $(ele);
           listInfo.push({
-            href: $li.find('a').attr('href'),
+            href: $li.find("a").attr("href"),
             //官网做了图片懒加载，图片地址挂在data-original属性上
-            imgSrc: $li.find('a>.pic>img').attr('data-original'),
-            title: $li.find('a>.info>.tit').text(),
-            content: $li.find('a>.info>.desc').text(),
-          })
-        })
+            imgSrc: $li.find("a>.pic>img").attr("data-original"),
+            title: $li.find("a>.info>.tit").text(),
+            content: $li.find("a>.info>.desc").text()
+          });
+        });
         Tool.Success(res, {
           allPage: pageInfoArr[0],
           total: pageInfoArr[1],
           data: listInfo
         });
       }
-    })
-  })
-}
+    });
+  });
+};
 
+//获取英雄list
+module.exports.getHeroList = (req, res) => {
+  Tool.superAgent({
+    Url: heroListUrl,
+    callback: $ => {
 
+      $('.herolist>li').each((i,ele)=>{
+        let $li=$(ele);
+        console.log($li.find('a').text());
+      })
 
-
-
-
-
-
+      // Tool.Success(res, {
+      //   allPage: pageInfoArr[0],
+      //   total: pageInfoArr[1],
+      //   data: listInfo
+      // });
+    }
+  });
+};
