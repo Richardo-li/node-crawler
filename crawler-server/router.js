@@ -9,5 +9,6 @@ const router = express.Router();
 router.get("/kvBg", handle.getKvBg); //获取王者荣耀官网背景图
 router.post("/newsList", handle.getNewsList); //获取攻略列表
 router.get("/heroList", handle.getHeroList); //获取英雄列表
+router.post("/heroDetail", handle.getHeroDetail); //获取英雄列表
 
 module.exports = router;

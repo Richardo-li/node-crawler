@@ -56,3 +56,10 @@ module.exports.superAgent = (params = {}) => {
 module.exports.List = index => {
   return `http://www.18183.com/yxzjol/gonglue/list_13161_${index}.html`;
 };
+
+/**
+ *   英雄详情
+ */
+module.exports.heroDetailUrl = id => {
+  return `http://pvp.qq.com/web201605/herodetail/${id}.shtml`;
+};

@@ -5,11 +5,15 @@
       <slot>英雄列表</slot>
     </title-comp>
     <ul class="heroBox">
-      <li v-for="(item,i) in listData" :key="i">
+      <li v-for="(item,i) in listData" :key="i" @click="getDetail(item.heroNum)">
         <img :src="item.heroImg" alt="" class="heroImg">
         <span class="heroName">{{item.heroName}}</span>
       </li>
     </ul>
+
+    <transition name="el-fade-in-linear">
+      <hero-detail v-show="heroDetailFlag" :heroId='heroId' @childInfo='closeMydiv'></hero-detail>
+    </transition>
 
   </div>
 </template>
@@ -17,15 +21,19 @@
 <script>
 
 import titleComp from "@/components/title-comp.vue";
+import heroDetail from '@/components/hero-detail.vue';
 
 export default {
   name: "heroList",
-  components:{
-    titleComp
+  components: {
+    titleComp,
+    heroDetail
   },
   data() {
     return {
-      listData: []
+      listData: [],
+      heroId: '',
+      heroDetailFlag: false,
     };
   },
   methods: {
@@ -33,6 +41,13 @@ export default {
       this.$axios.get("/heroList").then(res => {
         this.listData = res.data;
       });
+    },
+    getDetail(id) {
+      this.heroId = id;
+      this.heroDetailFlag = true;
+    },
+    closeMydiv(flag) {
+      this.heroDetailFlag = flag;
     }
   },
   created() {

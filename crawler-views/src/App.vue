@@ -101,7 +101,6 @@ export default {
     text-align: center;
     border-radius: 50%;
     line-height: 50px;
-    // margin: -30px;
     z-index: 500;
     position: fixed;
     top: 30px;
