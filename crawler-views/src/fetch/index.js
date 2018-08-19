@@ -13,6 +13,7 @@ if (process.env.NODE_ENV == "development") {
 } else if (process.env.NODE_ENV == "production") {
   //生产环境
   // axios.defaults.baseURL = "";
+  axios.defaults.baseURL = "http://127.0.0.1:8888";
 }
 
 //设置默认请求头

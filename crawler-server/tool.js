@@ -23,6 +23,8 @@ module.exports.Success = (res, sData) => {  //成功的回调
     })
   );
 };
+
+
 module.exports.False = (res) => {  //失败的回调
   res.end(
     JSON.stringify({
@@ -45,10 +47,21 @@ module.exports.superAgent = (params = {}) => {
     .charset(params.charset) //设置编码格式
     .end((err, sres) => {
       if (err) return next(err);
-      var $ = cheerio.load(sres.text,{ ignoreWhitespace: true, xmlMode: true, lowerCaseTags: true});
+      var $ = cheerio.load(sres.text, { ignoreWhitespace: true, xmlMode: true, lowerCaseTags: true });
       params.callback($); //回调
     });
 };
+
+
+/**
+ *   攻略信息根据 index翻页
+ */
+module.exports.jq22Url = () => {
+  // jq22官网背景图随机 a1~a15 
+  var x = parseInt(Math.random() * (15 - 1 + 1) + 1);
+  return `http://www.jq22.com/js/a${x}.html`;
+};
+
 
 /**
  *   攻略信息根据 index翻页
@@ -58,8 +71,32 @@ module.exports.List = index => {
 };
 
 /**
+ *  攻略信息详情
+ */
+module.exports.ListDetail = (date, num) => {
+  return `http://www.18183.com/yxzjol/${date}/${num}.html`;
+};
+
+
+/**
+ *   王者荣耀首页地址
+ */
+module.exports.heroHomeUrl = `http://pvp.qq.com/`;
+
+
+/**
+ *   王者荣耀英雄列表地址
+ */
+module.exports.heroListUrl = `http://pvp.qq.com/web201605/herolist.shtml`;
+
+
+/**
  *   英雄详情
  */
 module.exports.heroDetailUrl = id => {
   return `http://pvp.qq.com/web201605/herodetail/${id}.shtml`;
 };
+
+
+
+

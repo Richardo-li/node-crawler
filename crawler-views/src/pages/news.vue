@@ -4,20 +4,24 @@
     <title-comp>
       <slot>攻略列表</slot>
     </title-comp>
-    <div class="news">
-      <a :href="item.href" v-for="(item,i) in listData" :key="i" target="_blank">
+    <div class="newsInfo">
+      <div v-for="(item,i) in listData" :key="i" @click="getDetail(item.detailInfo.date,item.detailInfo.num)">
         <span>
           <img :src="item.imgSrc" alt="" class="newsImg">
           <span class="tit">{{item.title}}</span>
           <span class="cte">{{item.content}}</span>
           <span class="look">阅读全文</span>
         </span>
-      </a>
+      </div>
     </div>
 
     <div class="block">
       <el-pagination :background='true' @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="pager.currentPage" :page-size="100" layout="prev, pager, next, jumper" :total="pager.total">
       </el-pagination>
+    </div>
+
+    <div v-html="detailInfor">
+
     </div>
 
   </div>
@@ -33,6 +37,7 @@ export default {
   },
   data() {
     return {
+      detailInfor:'',
       currentDate: new Date(),
       listData: [],
       pager: {
@@ -47,6 +52,17 @@ export default {
         this.listData = res.data.data;
         this.pager.total = Number(res.data.total);
       });
+    },
+    getDetail(date, num) {
+      this.$axios
+        .post("newsListDetail", {
+          date: date,
+          num: num
+        })
+        .then(res => {
+          console.log(res);
+          this.detailInfor=res.data;
+        });
     },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
@@ -78,9 +94,9 @@ export default {
     width: 100%;
     height: 100%;
   }
-  .news {
-    a {
-      display: block;
+  .newsInfo {
+    > div {
+      cursor: pointer;
       margin: 18px;
       height: 170px;
       width: 100%;

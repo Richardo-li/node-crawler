@@ -27,19 +27,13 @@
 <script>
 export default {
   name: "App",
-  components: {
-  },
+  components: {},
   data() {
     return {
       bgFlag: true,
-      kvBg: "",
-      randomNum: parseInt(Math.random() * (15 - 1 + 1) + 1)
+      iframeBG: "",
+      kvBg: ""
     };
-  },
-  computed: {
-    iframeBG() {
-      return `http://www.jq22.com/js/a${this.randomNum}.html`;
-    }
   },
   methods: {
     getKvBg() {
@@ -47,24 +41,36 @@ export default {
       this.$axios.get("/kvBg").then(res => {
         if (res.data == null) {
           this.bgFlag = false;
+          this.getJq22Bg();
           return;
         }
         this.bgFlag = true;
         this.kvBg = res.data;
       });
     },
+    getJq22Bg() {
+      this.$axios.get("/jq22Bg").then(res => {
+        this.iframeBG = res.data;
+      });
+    },
     handleCommand(command) {
       if (command == "bg") {
         if (this.bgFlag) {
-          this.randomNum = parseInt(Math.random() * (15 - 1 + 1) + 1);
+          this.getJq22Bg();
         }
-        this.bgFlag = !this.bgFlag;
+        if (this.kvBg) {
+          this.bgFlag = !this.bgFlag;
+        } else {
+          this.getJq22Bg();
+        }
         return;
       }
+
       this.$router.push(command);
     }
   },
   created() {
+    this.getJq22Bg();
     this.getKvBg();
   }
 };

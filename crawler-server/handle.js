@@ -1,12 +1,10 @@
 //该脚本用来处理数据并返回
 const Tool = require("./tool"); //自定义模块
-const heroHomeUrl = "http://pvp.qq.com/";
-const heroListUrl = "http://pvp.qq.com/web201605/herolist.shtml";
 
-//获取背景图
+//获取王者荣耀背景图
 module.exports.getKvBg = (req, res) => {
   Tool.superAgent({
-    Url: heroHomeUrl,
+    Url: Tool.heroHomeUrl,
     callback: $ => {
       //相当于jQuery的dom操作
       var str = $(".kv-bg").attr("style"); //获取背景图
@@ -18,6 +16,11 @@ module.exports.getKvBg = (req, res) => {
     }
   });
 };
+
+//获取jq22背景图
+module.exports.getJq22Bg = (req, res) => {
+  Tool.Success(res, Tool.jq22Url());
+}
 
 //获取攻略新闻list
 module.exports.getNewsList = (req, res) => {
@@ -38,7 +41,10 @@ module.exports.getNewsList = (req, res) => {
         $(".list-detail>li").each((index, ele) => {
           let $li = $(ele);
           listInfo.push({
-            href: $li.find("a").attr("href"),
+            detailInfo: {
+              date: $li.find("a").attr("href").match(/\d+/g)[1],
+              num: $li.find("a").attr("href").match(/\d+/g)[2]
+            },
             //官网做了图片懒加载，图片地址挂在data-original属性上
             imgSrc: $li.find("a>.pic>img").attr("data-original"),
             title: $li.find("a>.info>.tit").text(),
@@ -55,10 +61,35 @@ module.exports.getNewsList = (req, res) => {
   });
 };
 
+//获取攻略新闻详情
+module.exports.getNewsListDetail = (req, res) => {
+  //先得到前端传来的数据
+  var param = "";
+  req.on("data", chunk => {
+    param += chunk;
+  });
+  req.on("end", () => {
+    param = JSON.parse(param)
+    Tool.superAgent({
+      Url: Tool.ListDetail(param.date, param.num),
+      callback: $ => {
+        let $html = $('.arc-body').html();
+        // Node.js爬虫抓取数据 -- HTML 实体编码处理办法   https://www.cnblogs.com/imwtr/p/4614297.html 
+        $html = unescape($html.replace(/\\u/g, "%u"));
+        $html = $html.replace(/&#(x)?(\w+);/g, function ($, $1, $2) {
+          return String.fromCharCode(parseInt($2, $1 ? 16 : 10));
+        });
+        // console.log($html);
+        Tool.Success(res, $html);
+      }
+    });
+  });
+};
+
 //获取英雄list
 module.exports.getHeroList = (req, res) => {
   Tool.superAgent({
-    Url: heroListUrl,
+    Url: Tool.heroListUrl,
     charset: "gbk",
     callback: $ => {
       let arr = [];
@@ -107,7 +138,6 @@ module.exports.getHeroDetail = (req, res) => {
           });
         });
 
-
         //获取英雄属性
         let arr = [];
         $(".cover-list>li").each((i, ele) => {
@@ -128,7 +158,6 @@ module.exports.getHeroDetail = (req, res) => {
         $history = $history.replace(/&#(x)?(\w+);/g, function ($, $1, $2) {
           return String.fromCharCode(parseInt($2, $1 ? 16 : 10));
         });
-
 
 
         Tool.Success(res, {
