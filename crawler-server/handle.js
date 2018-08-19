@@ -89,6 +89,8 @@ module.exports.getHeroDetail = (req, res) => {
     Tool.superAgent({
       Url: Tool.heroDetailUrl(param),
       callback: $ => {
+
+        //获取背景图
         //可以查看网页源代码  倒数第三行 <script src="//pvp.qq.com/web201706/herodetail/cssjs/page.js"></script>
         //点击进去查看js代码，搜索 pic-pf-list  你会发现他是根据 自定义属性 data-imgname 来分割展示背景的
         // console.log($(".pic-pf-list").attr("data-imgname"));
@@ -119,9 +121,19 @@ module.exports.getHeroDetail = (req, res) => {
           });
         });
 
+        //获取英雄故事
+        // Node.js爬虫抓取数据 -- HTML 实体编码处理办法   https://www.cnblogs.com/imwtr/p/4614297.html 
+        var $history = $(" .pop-bd>p").html();
+        $history = unescape($history.replace(/\\u/g, "%u"));
+        $history = $history.replace(/&#(x)?(\w+);/g, function ($, $1, $2) {
+          return String.fromCharCode(parseInt($2, $1 ? 16 : 10));
+        });
+
+
+
         Tool.Success(res, {
           heroName: $(".cover-name").text(), //英雄名字
-          heroHistory: $("#hero-story>.pop-bd").text(),
+          heroHistory: $history,  //英雄故事
           classify: {
             class: $(".herodetail-sort>i").attr("class"),
             img: "//game.gtimg.cn/images/yxzj/web201605/page/hero-sort.png" //这是一张所有职业的图片，前端根据class判断，然后用精灵图展示
