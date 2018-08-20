@@ -159,6 +159,7 @@ export default {
     }
   }
   .detailInfo {
+    text-align: left;
     text-indent: 2em;
     line-height: 24px;
     font-size: 16px;
