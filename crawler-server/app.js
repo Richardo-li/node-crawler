@@ -9,6 +9,6 @@ app.use(cors());
 // 添加请求路由
 app.use(router);
 
-app.listen(8888, () => {
+app.listen(8888,'192.168.199.132', () => {
   console.log("success!");
 });

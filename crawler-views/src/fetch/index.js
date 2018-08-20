@@ -6,7 +6,8 @@ import { Message } from "element-ui"; //单独引入element-ui的Message组件
 // 环境的切换
 if (process.env.NODE_ENV == "development") {
   //开发环境
-  axios.defaults.baseURL = "http://127.0.0.1:8888";
+  // axios.defaults.baseURL = "http://127.0.0.1:8888";
+  axios.defaults.baseURL = "http://192.168.199.132:8888";
 } else if (process.env.NODE_ENV == "debug") {
   //测试环境
   // axios.defaults.baseURL = "";

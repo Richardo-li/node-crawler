@@ -46,7 +46,7 @@ module.exports.superAgent = (params = {}) => {
     .get(params.Url)
     .charset(params.charset) //设置编码格式
     .end((err, sres) => {
-      if (err) return next(err);
+      if (err) return console.log(err);
       var $ = cheerio.load(sres.text, { ignoreWhitespace: true, xmlMode: true, lowerCaseTags: true });
       params.callback($); //回调
     });
